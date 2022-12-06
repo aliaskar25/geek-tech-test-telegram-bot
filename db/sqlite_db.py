@@ -11,7 +11,7 @@ async def sql_start():
     if base:
         print('Database connected')
 
-        base.execute(
+        await base.execute(
             '''
             CREATE TABLE IF NOT EXISTS course(
                 course_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 
