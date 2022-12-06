@@ -15,7 +15,7 @@ from heroku_settings import (
 
 async def on_startup(_):
     print('Bot has started')
-    sqlite_db.sql_start()
+    await sqlite_db.sql_start()
     await bot.set_webhook(WEBHOOK_URL, drop_pending_updates=True)
 
 

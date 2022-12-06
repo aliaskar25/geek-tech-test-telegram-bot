@@ -2,7 +2,7 @@ import sqlite3
 from databases import Database
 
 
-def sql_start():
+async def sql_start():
     global base # cursor
     base = Database('sqlite:///db.sqlite3')
     
@@ -19,7 +19,7 @@ def sql_start():
             )
             '''
         )
-        base.execute(
+        await base.execute(
             '''
             CREATE TABLE IF NOT EXISTS student(
                 student_id INTEGER PRIMARY KEY NOT NULL, 
