@@ -52,9 +52,8 @@ async def sql_add_command(state, table=None):
         insert_query = f'INSERT INTO {table} VALUES (?, ?)'
 
     async with state.proxy() as data:
-        with base.cursor() as cursor:
-            cursor.execute(
-                insert_query, (None, *data.values())
-            )
-            base.commit()
+        await base.execute(
+            insert_query, (None, *data.values())
+        )
+        # base.commit()
 

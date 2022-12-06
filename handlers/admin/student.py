@@ -121,6 +121,7 @@ async def get_courses_list(message: types.Message):
                 )
             )
 
+
 async def get_students_by_course(message: types.Message):
     if message.text in ['/python', '/javascript']:
         query = f"SELECT * FROM student WHERE course = '{message.text[1:].capitalize()}'"
