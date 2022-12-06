@@ -1,9 +1,10 @@
 import sqlite3
+from databases import Database
 
 
 def sql_start():
     global base, cursor
-    base = sqlite3.connect('db.sqlite3')
+    base = Database('sqlite:///db.sqlite3')
     cursor = base.cursor()
     if base:
         print('Database connected')
