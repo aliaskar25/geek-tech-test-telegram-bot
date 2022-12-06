@@ -30,7 +30,6 @@ def sql_start():
             )
             '''
         )
-        base.commit()
 
 
 async def get_all_courses():
