@@ -7,8 +7,6 @@ from aiogram.types import (
 
 from db.sqlite_db import get_all_courses
 
-from main import on_startup
-
 
 client_address_btn = KeyboardButton('/address') # student_button
 client_courses_btn = KeyboardButton('/courses_list')
