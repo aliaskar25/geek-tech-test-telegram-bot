@@ -3,9 +3,11 @@ from databases import Database
 
 
 def sql_start():
-    global base, cursor
+    global base # cursor
     base = Database('sqlite:///db.sqlite3')
-    cursor = base.cursor()
+    
+    # with base.cursor() as cursor:
+    # cursor = base.cursor()
     if base:
         print('Database connected')
 
@@ -32,12 +34,14 @@ def sql_start():
 
 
 async def get_all_courses():
-    return cursor.execute("SELECT * FROM course").fetchall()
+    with base.cursor() as cursor:
+        return cursor.execute("SELECT * FROM course").fetchall()
 
 
 async def sql_delete_course(data):
-    cursor.execute("DELETE FROM course WHERE course_id == ?", (data, ))
-    base.commit()
+    with base.cursor() as cursor:
+        cursor.execute("DELETE FROM course WHERE course_id == ?", (data, ))
+        base.commit()
 
 
 async def sql_add_command(state, table=None):
@@ -49,8 +53,9 @@ async def sql_add_command(state, table=None):
         insert_query = f'INSERT INTO {table} VALUES (?, ?)'
 
     async with state.proxy() as data:
-        cursor.execute(
-            insert_query, (None, *data.values())
-        )
-        base.commit()
+        with base.cursor() as cursor:
+            cursor.execute(
+                insert_query, (None, *data.values())
+            )
+            base.commit()
 

@@ -111,14 +111,15 @@ async def delete_course(callback: types.CallbackQuery):
 
 
 async def get_courses_list(message: types.Message):
-    for obj in sqlite_db.cursor.execute('SELECT * FROM course').fetchall():
-        await bot.send_message(
-            message.from_user.id, 
-            text=f'ID курса: {obj[0]}\nНазвание курса: {obj[1]}\n',
-            reply_markup=InlineKeyboardMarkup().add(
-                InlineKeyboardButton('Удалить', callback_data=f"delete_{obj[0]}")
+    with sqlite_db.base.cursor() as cursor:
+        for obj in cursor.execute('SELECT * FROM course').fetchall():
+            await bot.send_message(
+                message.from_user.id, 
+                text=f'ID курса: {obj[0]}\nНазвание курса: {obj[1]}\n',
+                reply_markup=InlineKeyboardMarkup().add(
+                    InlineKeyboardButton('Удалить', callback_data=f"delete_{obj[0]}")
+                )
             )
-        )
 
 async def get_students_by_course(message: types.Message):
     if message.text in ['/python', '/javascript']:
@@ -127,8 +128,9 @@ async def get_students_by_course(message: types.Message):
         await message.answer('wrong data')
         return
 
-    for obj in sqlite_db.cursor.execute(query).fetchall():
-        await bot.send_photo(ID, obj[2], f"name: {obj[1]}\ncourse: {obj[3]}")
+    with sqlite_db.cursor() as cursor:
+        for obj in cursor.execute(query).fetchall():
+            await bot.send_photo(ID, obj[2], f"name: {obj[1]}\ncourse: {obj[3]}")
     await bot.send_message(
         message.from_user.id, "choose action: ", reply_markup=student_keyboard
     )
@@ -136,7 +138,8 @@ async def get_students_by_course(message: types.Message):
 
 async def delete_student(message: types.Message):
     if message.from_user.id == ID:
-        students = sqlite_db.cursor.execute(f"SELECT * FROM student").fetchall()
+        with sqlite_db.cursor() as cursor:
+            students = cursor.execute(f"SELECT * FROM student").fetchall()
         for student in students:
             await bot.send_photo(
                 message.from_user.id, student[2], 
